@@ -44,7 +44,11 @@ class PrescriptionResource extends Resource
     protected static ?string $model = Prescription::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->where('doctor_id', auth()->user()->id);
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -89,12 +93,18 @@ class PrescriptionResource extends Resource
                                 Hidden::make('investigavion_name'),
                     ]),
 
-                    DatePicker::make('next_visit_date')->label('Next Visit')->default(now()->addDays(15)),
+                    DatePicker::make('next_visit_date')->label('Next Visit'),
                     TextInput::make('next_visit_fee')->label('Next Visit Fee')->default(0)->required(),
                     Repeater::make('advice')
                         ->schema([
                             TextInput::make('advice')->label('advice'),
-                        ]),
+                        ])->mutateDehydratedStateUsing(function ($state) {
+        // Remove empty rows before saving
+                        return collect($state)
+                            ->filter(fn ($item) => !empty($item['advice']))
+                            ->values()
+                            ->all();
+                    }),
                 ])->grow(false)->columns(1)->columnSpan(1),
 
 
@@ -267,15 +277,15 @@ class PrescriptionResource extends Resource
                 Tables\Actions\EditAction::make(),
                 // Tables\Actions\ViewAction::make(),
                 Tables\Actions\Action::make('view')
-    ->label('View')
-    ->url(fn ($record) => PrescriptionResource::getUrl('view', ['record' => $record]))
-    ->icon('heroicon-o-eye'),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+                ->label('View')
+                ->url(fn ($record) => PrescriptionResource::getUrl('view', ['record' => $record]))
+                ->icon('heroicon-o-eye'),
+                        ])
+                        ->bulkActions([
+                            Tables\Actions\BulkActionGroup::make([
+                                Tables\Actions\DeleteBulkAction::make(),
+                            ]),
+                        ]);
     }
 
     public static function getRelations(): array

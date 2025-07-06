@@ -1,7 +1,23 @@
 <x-filament-panels::page>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const printButton = document.querySelector('.print-button');
+    if (printButton) {
+        printButton.addEventListener('click', function () {
+            const originalTitle = document.title;
+            document.title = "Prescription - {{ $record->patient_name }} - {{ $record->date }}";
+            window.print();
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 1000); // allow print dialog to open before reverting
+        });
+    }
+});
+</script>
+
     <style>
         .main_div {
-            min-width: 800px;
+            width: 800px;
             min-height:220mm;
             margin: 0 auto;
             padding: 10px;
@@ -19,7 +35,7 @@
         }
         .p_sidebar {
             border-right: 2px solid #000;
-            min-height: 600px;
+            min-height: 750px;
             height: 100%;
         }
         .p_main_content {
@@ -27,20 +43,60 @@
             min-height: 600px;
             height: 100%;
         }
+        .print-button {
+            background-color: #1d1491;
+            color: white;
+            padding: 5px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .print-button:hover {
+            background-color: #2419c0;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printableArea, #printableArea * {
+                visibility: visible;
+
+            }
+            #printableArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: 0 0 0 0 !important;
+            }
+            .print-button {
+                display: none !important;
+            }
+        }
 
     </style>
-    <div class="mx-auto mt-10  p-8 main_div " >
+    <div>
+    <div class="mx-auto mt-10 p-8 flex items-center justify-end">
+        <button class="print-button">
+            Print
+        </button>
+    </div>
+    <div class="mx-auto mt-10  p-8 main_div " id="printableArea">
         <div class="flex items-center justify-between p_header pb-10">
             <div class="flex items-start justify-start flex-col">
                <h4 class="text-2xl font-bold text-gray-800"> {{ $record->doctor->name }}</h4>
                <p>{{ $record->doctor->email }}</p>
+               <p>Date :{{ $record->date }}</p>
             </div>
             <div>
-                <img src="{{ asset('images/logo.jpg') }}" alt="Logo" class="h-16 w-auto" />
+                <img src="{{ asset('images/logo2.png') }}" alt="Logo" class="h-16 w-auto" />
             </div>
             <div class="flex items-start justify-start flex-col">
-               <h4 class="text-2xl font-bold text-gray-800"> {{ $record->doctor->name }}</h4>
-               <p>{{ $record->doctor->email }}</p>
+               <h4 class="text-2xl font-bold text-gray-800"> Softstation71</h4>
+               <p>info@softstation71.com</p>
+               <p>www.softstation71.com</p>
             </div>
         </div>
         <div class="flex items-center justify-between flex-grow" style="border-bottom: 1px solid #000 ; padding-left:30px; gap:20px; ">
@@ -87,21 +143,51 @@
         <div class=" p_sidebar " style="width: 30%;">
             <div style="padding-top: 10px">
               <h2 class="font-bold text-lg">Vital Sign</h2>
+              @if ($record->vitalSign->bp_higher != null && $record->vitalSign->bp_lower != null)
               <p>BP: {{ $record->vitalSign->bp_higher }}/{{ $record->vitalSign->bp_lower }}</p>
+              @endif
+              @if ($record->vitalSign->pulse_rate != null)
               <p>Pulse rate: {{ $record->vitalSign->pulse_rate }}</p>
-              <p>Respiratory Rate: {{ $record->vitalSign->respiration_rate }}</p>
-              <p>Heart Rate: {{ $record->vitalSign->hart_rate }}</p>
-              <p>O2 Saturation: {{ $record->vitalSign->oxygen_saturation }}</p>
-              <p>Temparature: {{ $record->vitalSign->temperature }}°  {{ $record->vitalSign->temperature_type }}</p>
-              <p>Weight: {{ $record->vitalSign->weight }} {{ $record->vitalSign->weight_type }} </p>
-              <p>Height:  {{ $record->vitalSign->height }} {{ $record->vitalSign->height_type }}</p>
-              <p>BMI: {{ $record->vitalSign->bmi }}</p>
-              <p>BSA: {{ $record->vitalSign->bsa }}</p>
-              <p>BMI Status: {{ $record->vitalSign->bmi_status }}</p>
-              <p>OFC: {{ $record->vitalSign->ofc }}</p>
-              <p>FHR: {{ $record->vitalSign->fhr }}</p>
-              <p>LMP: {{ $record->vitalSign->lpm_date }}</p>
 
+              @endif
+              @if ($record->vitalSign->respiration_rate != null)
+
+              <p>Respiratory Rate: {{ $record->vitalSign->respiration_rate }}</p>
+              @endif
+              {{-- ff  --}}
+              @if ($record->vitalSign->hart_rate != null)
+              <p>Heart Rate: {{ $record->vitalSign->hart_rate }}</p>
+              @endif
+              @if ($record->vitalSign->oxygen_saturation != null)
+              <p>O2 Saturation: {{ $record->vitalSign->oxygen_saturation }}</p>
+              @endif
+              @if ($record->vitalSign->temperature != null)
+              <p>Temparature: {{ $record->vitalSign->temperature }}°  {{ $record->vitalSign->temperature_type }}</p>
+              @endif
+              @if ($record->vitalSign->weight != null && $record->vitalSign->weight_type != null)
+              <p>Weight: {{ $record->vitalSign->weight }} {{ $record->vitalSign->weight_type }} </p>
+              @endif
+              @if ($record->vitalSign->height != null && $record->vitalSign->height_type != null)
+              <p>Height:  {{ $record->vitalSign->height }} {{ $record->vitalSign->height_type }}</p>
+              @endif
+              @if ($record->vitalSign->bmi != null)
+              <p>BMI: {{ $record->vitalSign->bmi }}</p>
+              @endif
+              @if ($record->vitalSign->bsa != null)
+              <p>BSA: {{ $record->vitalSign->bsa }}</p>
+              @endif
+              @if ($record->vitalSign->bmi_status != null)
+              <p>BMI Status: {{ $record->vitalSign->bmi_status }}</p>
+              @endif
+              @if ($record->vitalSign->ofc != null)
+              <p>OFC: {{ $record->vitalSign->ofc }}</p>
+              @endif
+              @if ($record->vitalSign->fhr != null)
+              <p>FHR: {{ $record->vitalSign->fhr }}</p>
+              @endif
+              @if ($record->vitalSign->lpm_date != null)
+              <p>LMP: {{ $record->vitalSign->lpm_date }}</p>
+                @endif
 
             </div>
             <div style="padding-top: 20px">
@@ -120,6 +206,12 @@
               <p> ◉ {{ $item['investigavion_name'] }}</p>
                 @endforeach
             </div>
+            <div style="padding-top: 20px">
+                <h2  class="font-bold text-lg">Next Visit</h2>
+                <p>Date :{{ $record->next_visit_date }}</p>
+                <p>Fee :{{ $record->next_visit_fee }}</p>
+            </div>
+
 
 
 
@@ -157,16 +249,22 @@
                 $i++;
             @endphp
             @endforeach
-
-            </div>
-            <div style="padding-top: 50px">
+            @if ($record->advice != null)
+</div>
+                <div style="padding-top: 50px">
                 <h2  class="font-bold text-lg">Advice</h2>
                 @foreach ($record->advice as $item)
 
               <p> ◉ {{ $item['advice'] }}</p>
+
+
                 @endforeach
             </div>
+            @endif
+
+
         </div>
+    </div>
     </div>
     {{-- {{ dd($record) }} --}}
 </x-filament-panels::page>

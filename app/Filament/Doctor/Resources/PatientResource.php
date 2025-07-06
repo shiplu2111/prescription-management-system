@@ -84,7 +84,6 @@ class PatientResource extends Resource
                             ])->required(),
                             Textarea::make('address')
                             ->label('Address')
-                            ->required()
                             ->rows(3),
                             FileUpload::make('image')->label('Image')->image()->imageEditor(),
 
@@ -220,8 +219,7 @@ class PatientResource extends Resource
 
                             TextInput::make('contact_person_number')
                             ->label('Emergency Contact Number')
-                            ->maxLength(255)
-                            ->required(),
+                            ->maxLength(255),
 
                             Select::make('contact_person_relation')
                             ->label('Relation')
@@ -235,7 +233,7 @@ class PatientResource extends Resource
                                 'Niece' => 'Niece',
                                 'Other' => 'Other',
                             ])
-                            ->required(),
+                            ->searchable(),
 
                             TextInput::make('contact_person_email')
                             ->label('Emergency Contact Email')

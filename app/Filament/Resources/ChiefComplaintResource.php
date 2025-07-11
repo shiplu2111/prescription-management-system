@@ -45,11 +45,7 @@ class ChiefComplaintResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Name')->sortable()->searchable()
-                ->unique(
-                                table: ChiefComplaint::class,
-                                ignorable: fn ($record) => $record
-                ),
+                TextColumn::make('name')->label('Name')->sortable()->searchable(),
                 TextColumn::make('description')->label('Description')->sortable()->searchable(),
             ])
             ->filters([

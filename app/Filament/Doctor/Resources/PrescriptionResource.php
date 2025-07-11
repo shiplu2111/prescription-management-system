@@ -34,11 +34,13 @@ use Filament\Forms\Components\Toggle;
 use App\Models\Patient;
 use App\Models\ChiefComplaint;
 use App\Models\Medicine;
-use App\Models\Investigavion;
+use App\Models\Chamber;
+use App\Models\Investigation;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Filters\SelectFilter;
 use App\Models\MedicinePrescription;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\Filter;
 class PrescriptionResource extends Resource
 {
     protected static ?string $model = Prescription::class;
@@ -57,6 +59,15 @@ class PrescriptionResource extends Resource
                     // Left column
                 Section::make([
                     Hidden::make('doctor_id')->default(auth()->user()->id),
+                    Select::make('chamber_id')
+                                ->label('Chamber Name')
+                                ->options(
+                                    Chamber::where('doctor_id', auth()->user()->id)
+                                        ->pluck('name', 'id')
+                                        ->toArray()
+                                )
+                                ->searchable()
+                                ->required(),
                     TextInput::make('date')
                                 ->label('Date')
                                 ->required()
@@ -78,23 +89,23 @@ class PrescriptionResource extends Resource
                                 Hidden::make('complaint_name'),
                             ]),
 
-                    Repeater::make('investigavion')
+                    Repeater::make('investigation')
                         ->schema([
-                            Select::make('investigavion_id')
-                                ->label('Investigavion')
-                                ->options(Investigavion::pluck('name','id')->toArray())
+                            Select::make('investigation_id')
+                                ->label('Investigation')
+                                ->options(Investigation::pluck('name','id')->toArray())
                                 ->reactive()
                                 ->afterStateUpdated(function ($state, callable $set) {
-                                    $investigavion = Investigavion::find($state);
-                                    $set('investigavion_name', $investigavion?->name);
+                                    $investigation = Investigation::find($state);
+                                    $set('investigation_name', $investigation?->name);
                                 })->columnSpan('full')
                                 ->searchable()
                                 ->required(),
-                                Hidden::make('investigavion_name'),
+                                Hidden::make('investigation_name'),
                     ]),
 
                     DatePicker::make('next_visit_date')->label('Next Visit'),
-                    TextInput::make('next_visit_fee')->label('Next Visit Fee')->default(0)->required(),
+                    TextInput::make('next_visit_fee')->label('Next Visit Fee')->default(0),
                     Repeater::make('advice')
                         ->schema([
                             TextInput::make('advice')->label('advice'),
@@ -272,6 +283,22 @@ class PrescriptionResource extends Resource
                     'female' => 'Female',
                     'other' => 'Other',
                 ]),
+                Filter::make('created_at')
+                ->form([
+                    DatePicker::make('created_from'),
+                    DatePicker::make('created_until'),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when(
+                            $data['created_from'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                        )
+                        ->when(
+                            $data['created_until'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                        );
+                }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

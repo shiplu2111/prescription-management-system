@@ -28,6 +28,7 @@ use Filament\Tables\Columns\IconColumn;
 use Illuminate\Support\Str;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\CheckboxColumn;
+use Filament\Tables\Filters\Filter;
 class PatientResource extends Resource
 {
     protected static ?string $model = Patient::class;
@@ -88,36 +89,9 @@ class PatientResource extends Resource
                             FileUpload::make('image')->label('Image')->image()->imageEditor(),
 
 
-                            DatePicker::make('date_of_birth')
-                            ->label('Date of Birth')
-                            ->required()
-                            ->reactive()
-                            ->afterStateUpdated(function (callable $set, $state) {
-                                if ($state) {
-                                    $dob = \Carbon\Carbon::parse($state);
-                                    $now = \Carbon\Carbon::now();
 
-                                    $diff = $dob->diff($now);
 
-                                    $years = $diff->y;
-                                    $months = $diff->m;
-                                    $days = $diff->d;
-
-                                    $ageString = "{$years} years";
-                                    if ($months > 0) {
-                                        $ageString .= ", {$months} months";
-                                    }
-                                    if ($days > 0) {
-                                        $ageString .= ", {$days} days";
-                                    }
-
-                                    $set('age', $ageString);
-                                } else {
-                                    $set('age', null);
-                                }
-                            }),
-
-                            TextInput::make('age')->label('Age')->required()->readOnly(),
+                            TextInput::make('age')->label('Age')->required(),
                             ToggleButtons::make('status')
                             ->label('Publication Status')
                             ->boolean()
@@ -259,7 +233,22 @@ class PatientResource extends Resource
 
             ])
             ->filters([
-                //
+                Filter::make('created_at')
+                ->form([
+                    DatePicker::make('created_from'),
+                    DatePicker::make('created_until'),
+                ])
+                ->query(function (Builder $query, array $data): Builder {
+                    return $query
+                        ->when(
+                            $data['created_from'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                        )
+                        ->when(
+                            $data['created_until'],
+                            fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                        );
+                }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

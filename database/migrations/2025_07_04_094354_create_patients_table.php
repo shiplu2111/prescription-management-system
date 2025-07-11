@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('gender');
             $table->string('age');
-            $table->string('date_of_birth');
+            $table->string('date_of_birth')->nullable();
             $table->string('weight')->nullable();
             $table->string('height')->nullable();
             $table->string('image')->nullable();

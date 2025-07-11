@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Investigavion;
+use App\Models\Investigation;
 
-class InvestigavionsSeeder extends Seeder
+class InvestigationsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -69,7 +69,7 @@ class InvestigavionsSeeder extends Seeder
         ]
         ;
         foreach ($data as $key => $value) {
-            Investigavion::create([
+            Investigation::create([
                 'name' => $value['name'],
                 'description' => $value['description'],
             ]);

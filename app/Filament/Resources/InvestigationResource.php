@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\InvestigavionResource\Pages;
-use App\Filament\Resources\InvestigavionResource\RelationManagers;
-use App\Models\Investigavion;
+use App\Filament\Resources\InvestigationResource\Pages;
+use App\Filament\Resources\InvestigationResource\RelationManagers;
+use App\Models\Investigation;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -27,18 +27,21 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Columns\IconColumn;
 use Illuminate\Support\Str;
 use Filament\Forms\Components\Textarea;
-class InvestigavionResource extends Resource
+class InvestigationResource extends Resource
 {
-    protected static ?string $model = Investigavion::class;
+    protected static ?string $model = Investigation::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+public static function getNavigationGroup(): ?string
+        {
+            return 'Settings'; // Match this to a group from navigationGroups()
+        }
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')->label('Name')->required()->columnSpan(2)->unique(
-                                table: Investigavion::class,
+                                table: Investigation::class,
                                 ignorable: fn ($record) => $record
                 ),
                 TextArea::make('description')->label('Description')->required()->columnSpan(2),
@@ -77,9 +80,9 @@ class InvestigavionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListInvestigavions::route('/'),
-            'create' => Pages\CreateInvestigavion::route('/create'),
-            'edit' => Pages\EditInvestigavion::route('/{record}/edit'),
+            'index' => Pages\ListInvestigations::route('/'),
+            'create' => Pages\CreateInvestigation::route('/create'),
+            'edit' => Pages\EditInvestigation::route('/{record}/edit'),
         ];
     }
 }

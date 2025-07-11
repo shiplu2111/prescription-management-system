@@ -10,12 +10,25 @@ use App\Models\Patient;
 
 class Prescription extends Model
 {
-    protected $fillable = ['patient_id', 'doctor_id', 'prescription_medicines', 'date', 'next_visit_date', 'next_visit_fee', 'complaint',
-    'investigavion', 'advice','patient_name','patient_age','patient_gender','patient_mobile','patient_address'];
+    protected $fillable = [
+    'patient_id',
+    'doctor_id',
+    'chamber_id',
+    'date',
+    'next_visit_date',
+    'prescription_medicines',
+    'next_visit_fee',
+    'complaint',
+    'investigation',
+    'advice','patient_name',
+    'patient_age',
+    'patient_gender',
+    'patient_mobile',
+    'patient_address'];
 
     protected $casts = [
         'complaint' => 'array',
-        'investigavion' => 'array',
+        'investigation' => 'array',
         'prescription_medicines' => 'array',
         'advice' => 'array',
     ];
@@ -33,6 +46,11 @@ class Prescription extends Model
     public function vitalSign()
     {
         return $this->hasOne(VitalSign::class);
+    }
+
+    public function chamber()
+    {
+        return $this->belongsTo(Chamber::class, 'chamber_id');
     }
 
 }

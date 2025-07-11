@@ -18,6 +18,11 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Filament\Navigation\NavigationGroup;
+use App\Filament\Auth\CustomLogin;
+use App\Filament\Resources\InvestigationResource;
+use App\Filament\Resources\MedicineResource;
+use App\Filament\Resources\ChiefComplaintResource;
+
 
 
 class DoctorPanelProvider extends PanelProvider
@@ -27,14 +32,16 @@ class DoctorPanelProvider extends PanelProvider
         return $panel
             ->id('doctor')
             ->path('doctor')
-            ->login()
+            ->login(CustomLogin::class)
             ->sidebarFullyCollapsibleOnDesktop()
             ->topNavigation()
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->resources([
-                // No resources for doctors yet
+             ->resources([
+                InvestigationResource::class, // Admin can see users
+                MedicineResource::class,
+                ChiefComplaintResource::class,
             ])
             ->discoverResources(in: app_path('Filament/Doctor/Resources'), for: 'App\\Filament\\Doctor\\Resources')
             ->discoverPages(in: app_path('Filament/Doctor/Pages'), for: 'App\\Filament\\Doctor\\Pages')
@@ -46,6 +53,7 @@ class DoctorPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
+
             ->middleware([
 
                 EncryptCookies::class,
@@ -65,6 +73,9 @@ class DoctorPanelProvider extends PanelProvider
             ->navigationGroups([
             NavigationGroup::make()
                 ->label('Patient')
+                ->collapsed(),
+            NavigationGroup::make()
+                ->label('Settings')
                 ->collapsed(),
         ])
             ;

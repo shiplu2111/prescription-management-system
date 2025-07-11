@@ -32,12 +32,19 @@ class ChiefComplaintResource extends Resource
     protected static ?string $model = ChiefComplaint::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+public static function getNavigationGroup(): ?string
+        {
+            return 'Settings'; // Match this to a group from navigationGroups()
+        }
     public static function form(Form $form): Form
     {
-        return $form
+         return $form
             ->schema([
-                //
+                TextInput::make('name')->label('Name')->required()->columnSpan(2)->unique(
+                                table: Investigation::class,
+                                ignorable: fn ($record) => $record
+                ),
+                TextArea::make('description')->label('Description')->required()->columnSpan(2),
             ]);
     }
 

@@ -17,8 +17,10 @@ return new class extends Migration
         $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
         $table->unsignedBigInteger('doctor_id');
         $table->foreign('doctor_id')->references('id')->on('users')->onDelete('cascade');
+        $table->unsignedBigInteger('chamber_id')->nullable();
+        $table->foreign('chamber_id')->references('id')->on('chambers')->onDelete('cascade');
         $table->longText('complaint')->nullable();
-        $table->longText('investigavion')->nullable();
+        $table->longText('investigation')->nullable();
         $table->longText('prescription_medicines')->nullable();
         $table->string('patient_name')->nullable();
         $table->string('patient_age')->nullable();

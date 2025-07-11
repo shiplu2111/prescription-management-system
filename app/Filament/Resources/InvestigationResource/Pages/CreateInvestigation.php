@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\InvestigavionResource\Pages;
+namespace App\Filament\Resources\InvestigationResource\Pages;
 
-use App\Filament\Resources\InvestigavionResource;
+use App\Filament\Resources\InvestigationResource;
 use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Notifications\Notification;
 
-class CreateInvestigavion extends CreateRecord
+class CreateInvestigation extends CreateRecord
 {
-    protected static string $resource = InvestigavionResource::class;
+    protected static string $resource = InvestigationResource::class;
        protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
@@ -18,7 +18,7 @@ class CreateInvestigavion extends CreateRecord
     {
         Notification::make()
             ->title(' Created 💃💃')
-            ->body('The Investigavion has been successfully created.')
+            ->body('The Investigation has been successfully created.')
             ->success()
             ->send();
     }

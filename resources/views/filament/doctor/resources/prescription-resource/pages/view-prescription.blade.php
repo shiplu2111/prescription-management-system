@@ -14,7 +14,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 </script>
+<script>
+    const chambers = @json($chambers);
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const chamberDropdown = document.querySelector('select[name="chamber_dropdown"]');
 
+    chamberDropdown.addEventListener('change', function() {
+        const selectedId = this.value;
+        const chamber = chambers.find(c => c.id == selectedId);
+
+        if (chamber) {
+            document.getElementById('chamberName').textContent = chamber.name;
+            document.getElementById('chamberAddress').textContent = chamber.address;
+            document.getElementById('chamberPhone').textContent = chamber.phone;
+            document.getElementById('chamberOpening').textContent = chamber.opening_time;
+            document.getElementById('chamberClosing').textContent = chamber.closing_time;
+            document.getElementById('chamberEmail').textContent = chamber.email;
+        }
+    });
+});
+</script>
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('toggleHeader').addEventListener('click', function () {
+                const header = document.getElementById('headerSection');
+                header.classList.toggle('hidden');
+            });
+        });
+    </script>
+    @endpush
     <style>
         .main_div {
             width: 800px;
@@ -24,14 +55,25 @@ document.addEventListener('DOMContentLoaded', () => {
             height: auto;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
+        .p_header_container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            padding-bottom: 20px;
+
+            border-bottom: 1px solid #000;
+        }
         .p_header {
             width: 100%;
-            margin: 0 auto;
-            padding: 30px;
+            margin: 0;
+            padding-left: 30px;
+            padding-right: 10px;
             flex : 1;
             flex-direction: row;
             padding-bottom: 30px;
-            border-bottom: 1px solid #000;
         }
         .p_sidebar {
             border-right: 2px solid #000;
@@ -78,13 +120,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     </style>
     <div>
-    <div class="mx-auto mt-10 p-8 flex items-center justify-end">
+        {{-- {{ dd($chambers) }} --}}
+    <div class="mx-auto mt-10 p-8 flex items-center justify-between gap-4">
+        <div class="flex items-center justify-between gap-2 ">
         <button class="print-button">
             Print
         </button>
+         <button class="print-button" id="toggleHeader" >
+                    Hide / Show Header
+          </button>
+
+          </div>
+          <div>
+            <select name="chamber_dropdown" class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:border-blue-500" style="width: 200px;">
+                <option value="">Select Chamber</option>
+                @foreach ($chambers as $chamber)
+                    <option value="{{ $chamber->id }}">{{ $chamber->name }}</option>
+                @endforeach
+            </select>
+          </div>
     </div>
     <div class="mx-auto mt-10  p-8 main_div " id="printableArea">
-        <div class="flex items-center justify-between p_header pb-10">
+        <div class="flex items-center justify-between p_header_container" style="min-height: 250px;" >
+           <div class="flex items-center justify-between p_header pb-10" id="headerSection">
             <div class="flex items-start justify-start flex-col">
                <h4 class="text-2xl font-bold text-gray-800"> {{ $record->doctor->name }}</h4>
                <p>{{ $record->doctor->email }}</p>
@@ -93,10 +151,15 @@ document.addEventListener('DOMContentLoaded', () => {
             <div>
                 <img src="{{ asset('images/logo2.png') }}" alt="Logo" class="h-16 w-auto" />
             </div>
-            <div class="flex items-start justify-start flex-col">
-               <h4 class="text-2xl font-bold text-gray-800"> Softstation71</h4>
-               <p>info@softstation71.com</p>
-               <p>www.softstation71.com</p>
+            <div class="flex items-end justify-end flex-col" style="text-align: right; max-width: 300px;">
+           <div class="flex items-end justify-end flex-col" id="headerChamberSection" style="text-align: right; max-width: 300px;">
+    <h4 class="text-2xl font-bold text-gray-800" id="chamberName">{{ $record->chamber->name }}</h4>
+    <p id="chamberAddress">{{ $record->chamber->address }}</p>
+    <p id="chamberPhone">{{ $record->chamber->phone }}</p>
+    <p><span id="chamberOpening">{{ $record->chamber->opening_time }}</span> - <span id="chamberClosing">{{ $record->chamber->closing_time }}</span></p>
+    <p id="chamberEmail">{{ $record->chamber->email }}</p>
+</div>
+            </div>
             </div>
         </div>
         <div class="flex items-center justify-between flex-grow" style="border-bottom: 1px solid #000 ; padding-left:30px; gap:20px; ">
@@ -201,9 +264,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div style="padding-top: 20px">
                 <h2  class="font-bold text-lg">Investigation</h2>
-                @foreach ($record->investigavion as $item)
+                @foreach ($record->investigation as $item)
 
-              <p> ◉ {{ $item['investigavion_name'] }}</p>
+              <p> ◉ {{ $item['investigation_name'] }}</p>
                 @endforeach
             </div>
             <div style="padding-top: 20px">

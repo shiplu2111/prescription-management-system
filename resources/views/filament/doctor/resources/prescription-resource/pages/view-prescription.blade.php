@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <style>
         .main_div {
             width: 800px;
-            min-height:220mm;
+            min-height:160mm;
             margin: 0 auto;
             padding: 10px;
             height: auto;
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         .p_sidebar {
             border-right: 2px solid #000;
-            min-height: 750px;
+            min-height: 650px;
             height: 100%;
         }
         .p_main_content {
@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cursor: pointer;
             margin-bottom: 20px;
         }
+
         .print-button:hover {
             background-color: #2419c0;
         }
@@ -111,11 +112,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 left: 0;
                 top: 0;
                 width: 100%;
+                min-height: 160mm;
+                padding: 10px;
                 box-shadow: 0 0 0 0 !important;
             }
             .print-button {
                 display: none !important;
             }
+
         }
 
     </style>
@@ -123,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {{-- {{ dd($chambers) }} --}}
     <div class="mx-auto mt-10 p-8 flex items-center justify-between gap-4">
         <div class="flex items-center justify-between gap-2 ">
-        <button class="print-button">
+        <button class="print-button fi-sidebar">
             Print
         </button>
          <button class="print-button" id="toggleHeader" >
@@ -132,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           </div>
           <div>
-            <select name="chamber_dropdown" class="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:border-blue-500" style="width: 200px;">
+            <select name="chamber_dropdown" class="border-2 border-black rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:border-blue-500" style="width: 200px;">
                 <option value="">Select Chamber</option>
                 @foreach ($chambers as $chamber)
                     <option value="{{ $chamber->id }}">{{ $chamber->name }}</option>

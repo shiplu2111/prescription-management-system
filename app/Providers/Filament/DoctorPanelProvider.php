@@ -34,7 +34,8 @@ class DoctorPanelProvider extends PanelProvider
             ->path('doctor')
             ->login(CustomLogin::class)
             ->sidebarFullyCollapsibleOnDesktop()
-            ->topNavigation()
+            // ->topNavigation()
+            ->sidebarWidth('14rem')
             ->colors([
                 'primary' => Color::Amber,
             ])

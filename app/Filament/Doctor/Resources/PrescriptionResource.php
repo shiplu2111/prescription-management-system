@@ -99,8 +99,7 @@ class PrescriptionResource extends Resource
                                     $investigation = Investigation::find($state);
                                     $set('investigation_name', $investigation?->name);
                                 })->columnSpan('full')
-                                ->searchable()
-                                ->required(),
+                                ->searchable(),
                                 Hidden::make('investigation_name'),
                     ]),
 
@@ -138,10 +137,9 @@ class PrescriptionResource extends Resource
                                         $set('patient_address', $patient?->address);
                                         $set('patient_name', $patient?->name);
                                     })
-                                ->searchable()
-                                ->required(),
+                                ->searchable(),
 
-                                Hidden::make('patient_name'),
+                                TextInput::make('patient_name')->label('Patient Name')->required(),
 
                     TextInput::make('patient_age')
                                 ->label('Patient Age')->required(),
@@ -150,7 +148,7 @@ class PrescriptionResource extends Resource
 
                     TextInput::make('patient_gender')
                                 ->label('Gender')->required(),
-                    TextInput::make('patient_address')->label('Address')->required()->columnSpan(2),
+                    TextInput::make('patient_address')->label('Address')->required(),
 
 
                     Fieldset::make('Prescription')

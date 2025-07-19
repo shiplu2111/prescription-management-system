@@ -53,4 +53,9 @@ class Prescription extends Model
         return $this->belongsTo(Chamber::class, 'chamber_id');
     }
 
+    public function advice()
+{
+    return $this->belongsToMany(Advice::class);
+}
+
 }

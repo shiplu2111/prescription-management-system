@@ -32,7 +32,7 @@ class MedicineResource extends Resource
 {
     protected static ?string $model = Medicine::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-plus-circle';
 public static function getNavigationGroup(): ?string
         {
             return 'Settings'; // Match this to a group from navigationGroups()

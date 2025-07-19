@@ -6,6 +6,8 @@ use App\Filament\Doctor\Resources\PrescriptionResource;
 use Filament\Resources\Pages\ViewRecord;
 use App\Models\Prescription;
 use App\Models\Chamber;
+use App\Models\Advice;
+use App\Models\Profile;
 use Illuminate\Database\Eloquent\Model;
 
 class ViewPrescription extends ViewRecord
@@ -30,7 +32,12 @@ class ViewPrescription extends ViewRecord
      public function getViewData(): array
     {
         return [
-            'chambers' => Chamber::all(),
+            'chambers' => Chamber::where('doctor_id', auth()->id())
+                ->get(),
+                'advices' => Advice::where('doctor_id', auth()->id())
+                ->get(),
+                'profile' => Profile::where('user_id', auth()->id())
+                ->first(),
         ];
     }
 }

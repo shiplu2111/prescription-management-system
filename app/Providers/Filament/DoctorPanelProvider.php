@@ -22,7 +22,10 @@ use App\Filament\Auth\CustomLogin;
 use App\Filament\Resources\InvestigationResource;
 use App\Filament\Resources\MedicineResource;
 use App\Filament\Resources\ChiefComplaintResource;
-
+use Filament\Navigation\NavigationBuilder;
+use Filament\Navigation\NavigationItem;
+use Filament\Navigation\MenuItem;
+use App\Filament\Doctor\Resources\ProfileResource;
 
 
 class DoctorPanelProvider extends PanelProvider
@@ -51,8 +54,8 @@ class DoctorPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Doctor/Widgets'), for: 'App\\Filament\\Doctor\\Widgets')
             ->widgets([
-                Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                // Widgets\AccountWidget::class,
+                // Widgets\FilamentInfoWidget::class,
             ])
 
             ->middleware([
@@ -71,6 +74,8 @@ class DoctorPanelProvider extends PanelProvider
                 Authenticate::class,
                 CheckUserRole::class . ':doctor',
             ])
+
+
             ->navigationGroups([
             NavigationGroup::make()
                 ->label('Patient')
@@ -78,7 +83,19 @@ class DoctorPanelProvider extends PanelProvider
             NavigationGroup::make()
                 ->label('Settings')
                 ->collapsed(),
+
         ])
-            ;
+        ->userMenuItems([
+    MenuItem::make()
+        ->label('Profile')
+        ->url(function (): string {
+            $profile = \App\Models\Profile::where('user_id', auth()->id())->first();
+
+            return $profile
+                ? \App\Filament\Doctor\Resources\ProfileResource::getUrl('edit', ['record' => $profile])
+                : \App\Filament\Doctor\Resources\ProfileResource::getUrl('create');
+        })
+        ->icon('heroicon-o-user-circle'),
+]);
     }
 }

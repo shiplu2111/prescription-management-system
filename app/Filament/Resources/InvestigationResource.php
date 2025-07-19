@@ -31,7 +31,7 @@ class InvestigationResource extends Resource
 {
     protected static ?string $model = Investigation::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-magnifying-glass';
 public static function getNavigationGroup(): ?string
         {
             return 'Settings'; // Match this to a group from navigationGroups()

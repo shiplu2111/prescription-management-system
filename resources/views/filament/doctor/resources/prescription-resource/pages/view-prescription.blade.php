@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         .p_sidebar {
             border-right: 2px solid #000;
-            min-height: 650px;
+            min-height: 630px;
             height: 100%;
         }
         .p_main_content {
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     </style>
     <div>
-        {{-- {{ dd($chambers) }} --}}
+        {{-- {{ dd($advices) }} --}}
     <div class="mx-auto mt-10 p-8 flex items-center justify-between gap-4">
         <div class="flex items-center justify-between gap-2 ">
         <button class="print-button fi-sidebar">
@@ -147,10 +147,17 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="mx-auto mt-10  p-8 main_div " id="printableArea">
         <div class="flex items-center justify-between p_header_container" style="min-height: 250px;" >
            <div class="flex items-center justify-between p_header pb-10" id="headerSection">
-            <div class="flex items-start justify-start flex-col">
+            <div class="flex items-start justify-start flex-col" style="max-width: 300px;">
                <h4 class="text-2xl font-bold text-gray-800"> {{ $record->doctor->name }}</h4>
-               <p>{{ $record->doctor->email }}</p>
+
+                {{-- <p>{{ $profile->specialization }}</p> --}}
+                <p>{{ $profile->degree }}</p>
+                <p>{{ $profile->institution }}</p>
+                <p>{{ $profile->experience }}</p>
+                <p>{{ $profile->designation }}</p>
+                <p>{{ $profile->university }}</p>
                <p>Date :{{ $record->date }}</p>
+               <p>{{ $record->doctor->email }}</p>
             </div>
             <div>
                 <img src="{{ asset('images/logo2.png') }}" alt="Logo" class="h-16 w-auto" />
@@ -309,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div>
                     <p></p>
-                    <p>{{$item['duration']}}</p>
+                    <p> {{$item['duration']}}</p>
                 </div>
             </div>
             @php
@@ -322,7 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h2  class="font-bold text-lg">Advice</h2>
                 @foreach ($record->advice as $item)
 
-              <p> ◉ {{ $item['advice'] }}</p>
+              <p> ◉ {{ $item['advice_name'] }}</p>
 
 
                 @endforeach

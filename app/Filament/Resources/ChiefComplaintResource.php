@@ -31,7 +31,7 @@ class ChiefComplaintResource extends Resource
 {
     protected static ?string $model = ChiefComplaint::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-exclamation-circle';
 public static function getNavigationGroup(): ?string
         {
             return 'Settings'; // Match this to a group from navigationGroups()

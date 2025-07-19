@@ -36,6 +36,7 @@ use App\Models\ChiefComplaint;
 use App\Models\Medicine;
 use App\Models\Chamber;
 use App\Models\Investigation;
+use App\Models\Advice;
 use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Filters\SelectFilter;
 use App\Models\MedicinePrescription;
@@ -105,22 +106,14 @@ class PrescriptionResource extends Resource
 
                     DatePicker::make('next_visit_date')->label('Next Visit'),
                     TextInput::make('next_visit_fee')->label('Next Visit Fee')->default(0),
-                    Repeater::make('advice')
-                        ->schema([
-                            TextInput::make('advice')->label('advice'),
-                        ])->mutateDehydratedStateUsing(function ($state) {
-        // Remove empty rows before saving
-                        return collect($state)
-                            ->filter(fn ($item) => !empty($item['advice']))
-                            ->values()
-                            ->all();
-                    }),
+
                 ])->grow(false)->columns(1)->columnSpan(1),
 
 
                // Right column
                 Section::make([
-
+                    Fieldset::make('Patient Details')
+                        ->schema([
                     Select::make('patient_id')
                                 ->label('Patient Name')
                                     ->options(
@@ -150,7 +143,7 @@ class PrescriptionResource extends Resource
                                 ->label('Gender')->required(),
                     TextInput::make('patient_address')->label('Address')->required(),
 
-
+                ]),
                     Fieldset::make('Prescription')
                         ->schema([
 
@@ -170,47 +163,49 @@ class PrescriptionResource extends Resource
                                 Select::make('dose')
                                 ->label('Dose/Use Mode:')
                                 ->options([
-                                    '1 x 1 x 1' => '1 x 1 x 1',
-                                    '1 x 0 x 1' => '1 x 0 x 1',
-                                    '1 x 1 x 0' => '1 x 1 x 0',
-                                    '0 x 1 x 1' => '0 x 1 x 1',
-                                    '0 x 0 x 1' => '0 x 0 x 1',
-                                    '0 x 1 x 0' => '0 x 1 x 0',
-                                    '1 x 0 x 0' => '1 x 0 x 0',
-                                    '1 x 1 x 1 x 1' => '1 x 1 x 1 x 1',
-                                    '1 x 1 x 1 x 1 x 1' => '1 x 1 x 1 x 1 x 1',
-                                    '1 x 1 x 1 x 1 x 1 x 1' => '1 x 1 x 1 x 1 x 1 x 1',
+                                    '১ x ১ x ১' => '১ x ১ x ১',
+                                    '১ x 0 x ১' => '১ x 0 x ১',
+                                    '১ x ১ x 0' => '১ x ১ x 0',
+                                    '0 x ১ x ১' => '0 x ১ x ১',
+                                    '0 x 0 x ১' => '0 x 0 x ১',
+                                    '0 x ১ x 0' => '0 x ১ x 0',
+                                    '১ x 0 x 0' => '১ x 0 x 0',
+                                    '১ x ১ x ১ x ১' => '১ x ১ x ১ x ১',
+                                    '১ x ১ x ১ x ১ x ১' => '১ x ১ x ১ x ১ x ১',
+                                    '১ x ১ x ১ x ১ x ১ x ১' => '১ x ১ x ১ x ১ x ১ x ১',
                                 ])->required()->searchable(),
                                 Select::make('use_time')
                                 ->label('Use Time')
                                 ->options([
-                                    'Before Meal' => 'Before Meal',
-                                    'After Meal' => 'After Meal',
-                                    'Before and After Meal' => 'Before and After Meal',
+                                    'খাবারের আগে' => 'খাবারের আগে',
+                                    'খাবারের আগে এবং পরে' => 'খাবারের আগে এবং পরে',
+                                    'খাবারের আগে এবং সাথে' => 'খাবারের আগে এবং সাথে',
+                                    'খাবারের সাথে' => 'খাবারের সাথে',
+                                    'খাবারের সাথে এবং পরে' => 'খাবারের সাথে এবং পরে',
+                                    'খাবারের পরে' => 'খাবারের পরে',
                                 ])->required()->searchable(),
                                 Select::make('duration')
                                     ->options([
 
-                                        'custom' => 'Custom',
-                                        '1 Day' => '1 Day',
-                                        '2 Day' => '2 Day',
-                                        '3 Day' => '3 Day',
-                                        '7 Day' => '7 Day',
-                                        '10 Day' => '10 Day',
-                                        '14 Day' => '14 Day',
-                                        '21 Day' => '21 Day',
-                                        '1 Month' => '1 Month',
-                                        '1.5 Month' => '1.5 Month',
-                                        '2 Month' => '2 Month',
-                                        '2.5 Month' => '2.5 Month',
-                                        '3 Month' => '3 Month',
-                                        '3.5 Month' => '3.5 Month',
-                                        '4 Month' => '4 Month',
-                                        '4.5 Month' => '4.5 Month',
-                                        '5 Month' => '5 Month',
-                                        '6 Month' => '6 Month',
-                                        '8 Month' => '8 Month',
-                                        '10 Month' => '10 Month',
+                                        '১ দিন' => '১ দিন',
+                                        '২ দিন' => '২ দিন',
+                                        '৩ দিন' => '৩ দিন',
+                                        '৭ দিন' => '৭ দিন',
+                                        '১০ দিন' => '১০ দিন',
+                                        '১৪ দিন' => '১৪ দিন',
+                                        '২১ দিন' => '২১ দিন',
+                                        '১ মাস' => '১ মাস',
+                                        '১.৫ মাস' => '১.৫ মাস',
+                                        '২ মাস' => '২ মাস',
+                                        '২.৫ মাস' => '২.৫ মাস',
+                                        '৩ মাস' => '৩ মাস',
+                                        '৩.৫ মাস' => '৩.৫ মাস',
+                                        '৪ মাস' => '৪ মাস',
+                                        '৪.৫ মাস' => '৪.৫ মাস',
+                                        '৫ মাস' => '৫ মাস',
+                                        '৬ মাস' => '৬ মাস',
+                                        '৮ মাস' => '৮ মাস',
+                                        '১০ মাস' => '১০ মাস',
 
                                     ])->reactive()->searchable(),
                                 TextInput::make('custom_duration')
@@ -222,6 +217,31 @@ class PrescriptionResource extends Resource
                                 }),
                      ])->columns(2)->columnSpan(2),
                     ]),
+
+                    Fieldset::make('Patient Advices')
+                        ->schema([
+                        Repeater::make('advice')
+                     ->schema([
+                            Select::make('advice_id')
+                                ->label('Advice')
+                                ->options(Advice::pluck('title','id')->toArray())
+                                ->reactive()
+                                ->afterStateUpdated(function ($state, callable $set) {
+                                    $advice = Advice::find($state);
+                                    $set('advice_name', $advice?->title);
+                                })->columnSpan('full')
+                                ->searchable(),
+                                Hidden::make('advice_name'),
+                    ])->mutateDehydratedStateUsing(function ($state) {
+        // Remove empty rows before saving
+                        return collect($state)
+                            ->filter(fn ($item) => !empty($item['advice']))
+                            ->values()
+                            ->all();
+                    })->columnSpan(3),
+                ]),
+                    Fieldset::make('Vital Signs')
+                        ->schema([
                     \Filament\Forms\Components\Group::make([
                             TextInput::make('pulse_rate')->maxLength(255)->label('Pulse Rate'),
                             TextInput::make('respiration_rate')->maxLength(255)->label('Respiration Rate'),
@@ -256,6 +276,8 @@ class PrescriptionResource extends Resource
                         ])
                         ->columns(5)->columnSpan(3)
                         ->relationship('vitalSign'),
+                ]),
+
                 ])->columns(3)->columnSpan(3),
             ])->from('lg'),
             ])->columns(1);

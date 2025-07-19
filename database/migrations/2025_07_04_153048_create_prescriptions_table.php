@@ -14,7 +14,7 @@ return new class extends Migration
      Schema::create('prescriptions', function (Blueprint $table) {
         $table->id();
         $table->unsignedBigInteger('patient_id')->nullable();
-        $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade');
+        $table->foreign('patient_id')->references('id')->on('patients')->onDelete('cascade')->nullable();
         $table->unsignedBigInteger('doctor_id');
         $table->foreign('doctor_id')->references('id')->on('users')->onDelete('cascade');
         $table->unsignedBigInteger('chamber_id')->nullable();
